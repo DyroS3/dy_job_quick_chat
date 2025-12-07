@@ -1,8 +1,9 @@
 # dy_job_quick_chat
 
-![版本](https://img.shields.io/badge/版本-0.1.0-blue.svg)
-![许可证](https://img.shields.io/badge/许可证-MIT-green.svg)
+![GitHub Release](https://img.shields.io/github/v/release/DyroS3/dy_job_quick_chat?label=版本&color=blue)
+![GitHub License](https://img.shields.io/github/license/DyroS3/dy_job_quick_chat?label=许可证&color=green)
 ![FiveM](https://img.shields.io/badge/FiveM-ESX-orange.svg)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/DyroS3/dy_job_quick_chat/release.yml?label=构建)
 
 ## 📖 简介
 

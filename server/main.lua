@@ -1,0 +1,89 @@
+local ESX = exports['es_extended']:getSharedObject()
+
+local messageCooldowns = {} -- [source] = lastSendTime
+
+local function DebugLog(...)
+    if Config.Debug then
+        print('[dy_quickchat:server]', ...)
+    end
+end
+
+--- 记录可疑行为到控制台
+local function SecurityLog(src, msg)
+    if Config.Security.LogSuspicious then
+        print(('[dy_quickchat] 安全警告 [玩家 %s]: %s'):format(src, msg))
+    end
+end
+
+--- 验证话术是否存在于该职业的话术库中
+---@param jobName string
+---@param message string
+---@return boolean
+local function IsValidQuote(jobName, message)
+    if not Config.Security.ValidateQuotes then return true end
+    if not JobQuotes or not JobQuotes[jobName] then return false end
+
+    for _, category in ipairs(JobQuotes[jobName].categories) do
+        for _, quote in ipairs(category.quotes) do
+            if quote.text == message then return true end
+        end
+    end
+    return false
+end
+
+--- 检查玩家消息冷却状态
+---@param src number
+---@return boolean
+local function CheckCooldown(src)
+    if not Config.Security.EnableCooldown then return true end
+
+    local now = GetGameTimer()
+    local last = messageCooldowns[src]
+
+    if last and (now - last) < Config.Security.CooldownTime then
+        return false
+    end
+
+    messageCooldowns[src] = now
+    return true
+end
+
+--- 接收客户端话术，验证后广播到所有玩家聊天框
+RegisterNetEvent('dy_quickchat:sendMessage', function(message)
+    local src = source
+
+    local xPlayer = ESX.GetPlayerFromId(src)
+    if not xPlayer then
+        SecurityLog(src, 'ESX 玩家对象不存在')
+        return
+    end
+
+    if not CheckCooldown(src) then
+        DebugLog('玩家', src, '消息发送过于频繁')
+        return
+    end
+
+    if type(message) ~= 'string' or #message == 0 then
+        SecurityLog(src, '消息格式无效')
+        return
+    end
+
+    local playerJob = xPlayer.job.name
+    if not IsValidQuote(playerJob, message) then
+        SecurityLog(src, ('非法话术 [职业: %s]: %s'):format(playerJob, message))
+        return
+    end
+
+    TriggerClientEvent('chat:addMessage', -1, {
+        template = Config.MessageTemplate,
+        args = { xPlayer.getName(), message },
+        color = Config.MessageColor
+    })
+
+    DebugLog('玩家', src, '发送消息:', message)
+end)
+
+--- 玩家断开时清理冷却记录
+AddEventHandler('playerDropped', function()
+    messageCooldowns[source] = nil
+end)

@@ -5,13 +5,14 @@ import QuickChatPanel from '@/components/QuickChatPanel.vue'
 
 const { isVisible, jobs, activeJobId, sendMessage, closePanel } = useNui()
 
-// 开发模式：模拟 NUI 消息
+// 开发模式：模拟 NUI 消息（只显示当前职业）
 if (import.meta.env.DEV) {
   onMounted(() => {
     window.postMessage({
       action: 'open',
       data: {
         activeJobId: 'police',
+        // 模拟只传递当前职业数据（单职业模式）
         jobs: [
           {
             id: 'police',
@@ -36,23 +37,6 @@ if (import.meta.env.DEV) {
                 quotes: [
                   { id: 'c001', text: '停下！这是警察！', favorite: false },
                   { id: 'c002', text: '放下武器，双手抱头！', favorite: false },
-                ]
-              }
-            ]
-          },
-          {
-            id: 'ambulance',
-            name: '医疗',
-            icon: 'mdi:ambulance',
-            description: '医疗人员常用语录',
-            categories: [
-              {
-                id: 'emergency',
-                name: '急救',
-                expanded: true,
-                quotes: [
-                  { id: 'e001', text: '请保持冷静，我们来帮助你', favorite: false },
-                  { id: 'e002', text: '请告诉我哪里不舒服', favorite: false },
                 ]
               }
             ]

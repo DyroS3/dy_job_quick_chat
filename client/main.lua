@@ -10,7 +10,7 @@ local function DebugLog(...)
     end
 end
 
---所有职业话术数据, 按 id 排序
+--- 获取所有职业话术数据, 按 id 排序
 ---@return table[]
 local function GetAllJobsData()
     local jobs = {}
@@ -23,13 +23,37 @@ local function GetAllJobsData()
     return jobs
 end
 
+--- 获取当前玩家职业对应的话术数据
+---@return table[] -- 只包含当前职业的数据数组
+local function GetCurrentJobData()
+    if not playerJob or not JobQuotes then
+        return {}
+    end
+    local jobData = JobQuotes[playerJob]
+    if jobData then
+        return { jobData }
+    end
+    return {}
+end
+
+--- 根据配置获取话术数据
+---@return table[]
+local function GetJobsData()
+    if Config.ShowCurrentJobOnly then
+        return GetCurrentJobData()
+    else
+        return GetAllJobsData()
+    end
+end
+
 --- 打开快捷语录面板, 发送职业数据到 NUI
 local function OpenQuickChat()
     if isOpen then return end
 
-    local jobs = GetAllJobsData()
+    local jobs = GetJobsData()
     if #jobs == 0 then
-        DebugLog('没有可用的职业话术数据')
+        Config.Notify(nil, '没有可用的话术数据', 'error')
+        DebugLog('没有可用的话术数据, 职业:', playerJob)
         return
     end
 
@@ -90,6 +114,16 @@ end)
 RegisterKeyMapping('quickchat', Config.OpenKeyDescription, 'keyboard', Config.OpenKey)
 RegisterCommand('quickchat', ToggleQuickChat, false)
 
+--- 初始化线程: 等待玩家加载完成后获取职业
+CreateThread(function()
+    while not ESX.IsPlayerLoaded() do
+        Wait(250)
+    end
+    local xPlayer = ESX.GetPlayerData()
+    UpdatePlayerJob(xPlayer.job)
+    DebugLog('初始化完成, 玩家职业已加载')
+end)
+
 --- 玩家加载完成时获取初始职业
 RegisterNetEvent('esx:playerLoaded', function(xPlayer)
     UpdatePlayerJob(xPlayer.job)
@@ -99,10 +133,18 @@ end)
 RegisterNetEvent('esx:setJob', function(job, lastJob)
     UpdatePlayerJob(job)
     if isOpen then
-        SendNUIMessage({
-            action = 'open',
-            data = { jobs = GetAllJobsData(), activeJobId = playerJob or '' }
-        })
+        local jobs = GetJobsData()
+        if #jobs == 0 then
+            -- 没有话术数据, 关闭面板
+            CloseQuickChat()
+            Config.Notify(nil, '没有可用的话术数据', 'info')
+            DebugLog('职业变更后没有可用话术, 已关闭面板')
+        else
+            SendNUIMessage({
+                action = 'open',
+                data = { jobs = jobs, activeJobId = playerJob or '' }
+            })
+        end
     end
 end)
 

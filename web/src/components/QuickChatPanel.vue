@@ -24,6 +24,9 @@ const selectedJob = computed(() => {
   return props.jobs.find(job => job.id === selectedJobId.value)
 })
 
+// 是否显示侧边栏（多个职业时显示）
+const showSidebar = computed(() => props.jobs.length > 1)
+
 // 过滤后的分类和话术
 const filteredCategories = computed(() => {
   if (!selectedJob.value) return []
@@ -88,9 +91,9 @@ onUnmounted(() => {
 
 <template>
   <div class="panel card">
-    <!-- Left Sidebar -->
+    <!-- Left Sidebar (只在多职业时显示) -->
     <Sidebar
-      v-if="jobs.length > 0"
+      v-if="showSidebar"
       :jobs="jobs"
       :selected-id="selectedJobId"
       :collapsed="sidebarCollapsed"

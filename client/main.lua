@@ -1,4 +1,4 @@
-local ESX = exports['es_extended']:getSharedObject()
+ESX = exports['es_extended']:getSharedObject()
 
 local isOpen = false  -- 面板是否打开
 local playerJob = nil -- 当前玩家职业名称

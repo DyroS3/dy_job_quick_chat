@@ -64,25 +64,29 @@ FiveM 职业快捷语录系统，根据玩家当前职业自动加载对应的�
 
 ## ⚙️ 配置指南
 
-### 基础配置 (config.lua)
+### 基础配置 (shared/config.lua)
 
 ```lua
 Config = {}
 
--- 热键设置 (参考 FiveM 按键映射)
+-- 热键设置
 Config.OpenKey = 'F6'
+Config.OpenKeyDescription = '打开快捷语录'
 
--- 默认主题 ('dark' 或 'light')
-Config.DefaultTheme = 'dark'
+-- 界面
+Config.DefaultTheme = 'dark'     -- 'dark' | 'light'
+Config.ShowCurrentJobOnly = true -- true: 只显示当前职业话术, false: 显示所有职业
 
--- 消息发送方式 ('chat' 或 'me')
-Config.MessageType = 'chat'
+-- 安全
+Config.Security = {
+    EnableCooldown = true, -- 消息冷却
+    CooldownTime = 1000,   -- 冷却时间 (ms)
+    ValidateQuotes = true, -- 验证话术来源
+    LogSuspicious = true,  -- 记录可疑行为
+}
 
--- 发送后自动关闭面板
-Config.CloseAfterSend = false
-
--- 点击语录直接发送
-Config.SendOnClick = true
+-- 调试
+Config.Debug = false
 ```
 
 ### 职业话术配置

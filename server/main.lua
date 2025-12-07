@@ -1,4 +1,4 @@
-local ESX = exports['es_extended']:getSharedObject()
+ESX = exports['es_extended']:getSharedObject()
 
 local messageCooldowns = {} -- [source] = lastSendTime
 

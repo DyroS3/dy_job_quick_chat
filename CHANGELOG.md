@@ -19,6 +19,7 @@
 
 ### 修复
 - 发布包 `web/dist` 目录结构
+- ESX 改为全局变量，修复 `Config.Notify` 调用时的 nil 错误
 
 ---
 

@@ -74,11 +74,20 @@ RegisterNetEvent('dy_quickchat:sendMessage', function(message)
         return
     end
 
-    TriggerClientEvent('chat:addMessage', -1, {
-        template = Config.MessageTemplate,
-        args = { xPlayer.getName(), message },
-        color = Config.MessageColor
-    })
+    if GetResourceState('mChat') == 'started' then
+        TriggerClientEvent('chat:addMessage', -1, {
+            tags = { xPlayer.job.name },
+            channel = { "ooc" },
+            args = { xPlayer.getName(), message }
+        })
+    else
+        TriggerClientEvent('chat:addMessage', -1, {
+            template = Config.MessageTemplate,
+            args = { xPlayer.getName(), message },
+            color = Config.MessageColor
+        })
+    end
+
 
     DebugLog('玩家', src, '发送消息:', message)
 end)

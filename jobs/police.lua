@@ -33,9 +33,9 @@ JobQuotes['police'] = {
             name = '日常巡逻',
             expanded = true,
             quotes = {
-                { id = 'p001', text = '请靠边停车，接受检查', favorite = false },
+                { id = 'p001', text = '^2请靠边^3停车, ^8接受检查', favorite = false },
                 { id = 'p002', text = '请出示您的驾照和行驶证', favorite = false },
-                { id = 'p003', text = '这是例行检查，请配合', favorite = false },
+                { id = 'p003', text = '这是例行检查, 请配合', favorite = false },
                 { id = 'p004', text = '请熄火并将双手放在方向盘上', favorite = false },
                 { id = 'p005', text = '请问您知道为什么被拦下吗？', favorite = false },
                 { id = 'p006', text = '您的车辆登记信息有问题', favorite = false },
@@ -47,11 +47,11 @@ JobQuotes['police'] = {
             expanded = true,
             quotes = {
                 { id = 'c001', text = '停下！这是警察！', favorite = false },
-                { id = 'c002', text = '放下武器，双手抱头！', favorite = false },
-                { id = 'c003', text = '你已被包围，放弃抵抗！', favorite = false },
+                { id = 'c002', text = '放下武器, 双手抱头！', favorite = false },
+                { id = 'c003', text = '你已被包围, 放弃抵抗！', favorite = false },
                 { id = 'c004', text = '这是最后警告！', favorite = false },
                 { id = 'c005', text = '不要试图逃跑！', favorite = false },
-                { id = 'c006', text = '趴在地上，双手放在头后！', favorite = false },
+                { id = 'c006', text = '趴在地上, 双手放在头后！', favorite = false },
             }
         },
         {
@@ -72,11 +72,11 @@ JobQuotes['police'] = {
             name = '交通执法',
             expanded = true,
             quotes = {
-                { id = 't001', text = '您超速了，请注意安全驾驶', favorite = false },
-                { id = 't002', text = '您闯红灯了，这是违法行为', favorite = false },
+                { id = 't001', text = '您超速了, 请注意安全驾驶', favorite = false },
+                { id = 't002', text = '您闯红灯了, 这是违法行为', favorite = false },
                 { id = 't003', text = '请不要在此处停车', favorite = false },
                 { id = 't004', text = '您的车辆需要进行检测', favorite = false },
-                { id = 't005', text = '这是您的罚单，请按时缴纳', favorite = false },
+                { id = 't005', text = '这是您的罚单, 请按时缴纳', favorite = false },
             }
         },
         {
@@ -84,10 +84,10 @@ JobQuotes['police'] = {
             name = '无线电通讯',
             expanded = true,
             quotes = {
-                { id = 'r001', text = '收到，正在前往现场', favorite = false },
-                { id = 'r002', text = '请求支援，我的位置是...', favorite = false },
-                { id = 'r003', text = '嫌疑人正在逃跑，方向是...', favorite = false },
-                { id = 'r004', text = '现场已控制，情况稳定', favorite = false },
+                { id = 'r001', text = '收到, 正在前往现场', favorite = false },
+                { id = 'r002', text = '请求支援, 我的位置是...', favorite = false },
+                { id = 'r003', text = '嫌疑人正在逃跑, 方向是...', favorite = false },
+                { id = 'r004', text = '现场已控制, 情况稳定', favorite = false },
                 { id = 'r005', text = '需要医疗支援', favorite = false },
             }
         }

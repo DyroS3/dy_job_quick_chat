@@ -19,6 +19,7 @@ const selectedJobId = ref(props.activeJobId || props.jobs[0]?.id || '')
 const sidebarCollapsed = ref(false)
 const expandedCategoryId = ref<string | null>(null)
 const searchQuery = ref('')
+const isDark = ref(false)
 
 const selectedJob = computed(() => {
   return props.jobs.find(job => job.id === selectedJobId.value)
@@ -80,7 +81,22 @@ function handleKeydown(e: KeyboardEvent) {
   }
 }
 
+function applyTheme() {
+  document.documentElement.setAttribute('data-theme', isDark.value ? 'dark' : 'light')
+}
+
+function toggleTheme() {
+  isDark.value = !isDark.value
+  localStorage.setItem('theme', isDark.value ? 'dark' : 'light')
+  applyTheme()
+}
+
 onMounted(() => {
+  // 初始化主题
+  const savedTheme = localStorage.getItem('theme')
+  isDark.value = savedTheme === 'dark'
+  applyTheme()
+
   window.addEventListener('keydown', handleKeydown)
 })
 
@@ -117,9 +133,20 @@ onUnmounted(() => {
           <Icon icon="mdi:message-text-fast" class="header-icon" />
           <h3>快捷语录</h3>
         </div>
-        <button class="btn btn-icon" @click="handleClose" title="关闭 (ESC)">
-          <Icon icon="mdi:close" width="20" />
-        </button>
+        <div class="header-actions">
+          <!-- 单职业模式下显示主题切换 -->
+          <button
+            v-if="!showSidebar"
+            class="btn btn-icon"
+            @click="toggleTheme"
+            :title="isDark ? '切换到浅色模式' : '切换到深色模式'"
+          >
+            <Icon :icon="isDark ? 'mdi:weather-sunny' : 'mdi:weather-night'" width="20" />
+          </button>
+          <button class="btn btn-icon" @click="handleClose" title="关闭 (ESC)">
+            <Icon icon="mdi:close" width="20" />
+          </button>
+        </div>
       </div>
 
       <!-- Search Bar -->
@@ -200,6 +227,12 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   gap: 12px;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 /* Search Bar */

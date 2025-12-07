@@ -25,9 +25,9 @@ if (import.meta.env.DEV) {
                 name: '日常巡逻',
                 expanded: true,
                 quotes: [
-                  { id: 'p001', text: '请靠边停车，接受检查', favorite: false },
-                  { id: 'p002', text: '请出示您的驾照和行驶证', favorite: false },
-                  { id: 'p003', text: '这是例行检查，请配合', favorite: false },
+                  { id: 'p001', text: '^1[警察]^0 请靠边停车，接受检查', favorite: false },
+                  { id: 'p002', text: '^4[LSPD]^0 请出示您的驾照和行驶证', favorite: false },
+                  { id: 'p003', text: '^2[提示]^0 这是例行检查，请配合', favorite: false },
                 ]
               },
               {
@@ -35,8 +35,8 @@ if (import.meta.env.DEV) {
                 name: '追捕嫌疑人',
                 expanded: true,
                 quotes: [
-                  { id: 'c001', text: '停下！这是警察！', favorite: false },
-                  { id: 'c002', text: '放下武器，双手抱头！', favorite: false },
+                  { id: 'c001', text: '^1[警告]^0 停下！这是^1警察^0！', favorite: false },
+                  { id: 'c002', text: '^8[紧急]^0 放下^3武器^0，^6双手抱头^0！', favorite: false },
                 ]
               }
             ]

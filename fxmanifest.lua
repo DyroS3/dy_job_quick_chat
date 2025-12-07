@@ -4,7 +4,7 @@ game 'gta5'
 name 'dy_job_quick_chat'
 description '职业快捷语录系统 - 根据玩家职业提供预设话术模板'
 author 'DY'
-version '0.1.0'
+version '0.3.0'
 
 -- 共享脚本 (客户端和服务端都会加载)
 shared_scripts {

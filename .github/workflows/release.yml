@@ -39,7 +39,8 @@ jobs:
           cp -r server release/dy_job_quick_chat/
           cp -r shared release/dy_job_quick_chat/
           cp -r jobs release/dy_job_quick_chat/
-          cp -r web/dist release/dy_job_quick_chat/web/
+          mkdir -p release/dy_job_quick_chat/web
+          cp -r web/dist release/dy_job_quick_chat/web/dist
           cp fxmanifest.lua release/dy_job_quick_chat/
           cp README.md release/dy_job_quick_chat/
           cp LICENSE release/dy_job_quick_chat/

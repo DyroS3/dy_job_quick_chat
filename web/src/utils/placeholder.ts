@@ -1,16 +1,15 @@
 import type { Quote } from '@/types'
 
 /**
- * 转义特殊字符：{ } ^0-^9
- * 防止用户输入干扰模板语法或注入颜色代码
+ * 转义特殊字符：{ }
+ * 防止用户输入干扰模板语法
+ * 注意：颜色代码 ^0-^9 不转义，允许用户输入颜色
  */
 export function escapeSpecialChars(input: string): string {
   let result = input
-  // 转义花括号
+  // 只转义花括号
   result = result.replace(/\{/g, '\\{')
   result = result.replace(/\}/g, '\\}')
-  // 转义 FiveM 颜色代码 ^0-^9
-  result = result.replace(/\^([0-9])/g, '\\^$1')
   return result
 }
 

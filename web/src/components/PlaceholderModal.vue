@@ -59,7 +59,7 @@ watch(() => props.visible, (visible) => {
   if (visible) initFormValues()
 })
 
-// 预览文本：未填写的占位符显示为 [label]
+// 预览文本：未填写的占位符显示为 [label]，预览不转义
 const previewText = computed(() => {
   let text = props.quote.text
   if (props.quote.placeholders) {
@@ -67,8 +67,8 @@ const previewText = computed(() => {
       const value = formValues.value[p.key]
       const pattern = new RegExp(`\\{${p.key}\\}`, 'g')
       if (value && value.trim()) {
-        // 有值：替换为用户输入（已转义）
-        text = text.replace(pattern, value.replace(/\{/g, '\\{').replace(/\}/g, '\\}').replace(/\^([0-9])/g, '\\^$1'))
+        // 有值：直接显示用户输入（预览不转义）
+        text = text.replace(pattern, value)
       } else {
         // 无值：显示 [label]
         text = text.replace(pattern, `[${p.label}]`)

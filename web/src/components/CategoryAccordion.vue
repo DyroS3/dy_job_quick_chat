@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watch, nextTick } from 'vue'
 import { Icon } from '@iconify/vue'
-import type { Category } from '@/types'
+import type { Category, Quote } from '@/types'
 import QuoteItem from './QuoteItem.vue'
 
 const props = defineProps<{
@@ -12,6 +12,7 @@ const props = defineProps<{
 const emit = defineEmits<{
   send: [message: string]
   toggle: []
+  openPlaceholder: [quote: Quote]
 }>()
 
 const accordionRef = ref<HTMLElement | null>(null)
@@ -31,6 +32,10 @@ function handleToggle() {
 
 function handleSend(message: string) {
   emit('send', message)
+}
+
+function handleOpenPlaceholder(quote: Quote) {
+  emit('openPlaceholder', quote)
 }
 </script>
 
@@ -55,6 +60,7 @@ function handleSend(message: string) {
           :key="quote.id"
           :quote="quote"
           @send="handleSend"
+          @open-placeholder="handleOpenPlaceholder"
         />
       </div>
     </Transition>

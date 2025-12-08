@@ -1,8 +1,18 @@
+/** 占位符定义 */
+export interface Placeholder {
+  key: string         // 占位符标识，对应 {key}
+  label: string       // 表单显示的中文标签
+  default?: string    // 默认值
+  required?: boolean  // 是否必填，默认 false
+  maxLength?: number  // 最大长度，默认 100
+}
+
 /** 话术条目 */
 export interface Quote {
   id: string
   text: string
   favorite: boolean
+  placeholders?: Placeholder[]  // 可选的占位符列表
 }
 
 /** 话术分类 */

@@ -15,7 +15,37 @@ local function SecurityLog(src, msg)
     end
 end
 
+--- 将话术模板转换为 Lua 匹配模式
+--- 占位符 {key} 转换为 (.+) 或 (.*)
+---@param template string 话术模板
+---@param placeholders table|nil 占位符定义列表
+---@return string Lua 匹配模式
+local function TemplateToPattern(template, placeholders)
+    -- 转义 Lua 模式特殊字符
+    local pattern = template:gsub('([%(%)%.%%%+%-%*%?%[%]%^%$])', '%%%1')
+
+    -- 构建占位符 required 映射
+    local requiredMap = {}
+    if placeholders then
+        for _, p in ipairs(placeholders) do
+            requiredMap[p.key] = p.required
+        end
+    end
+
+    -- 替换 {key} 为匹配模式
+    pattern = pattern:gsub('%{([^}]+)%}', function(key)
+        if requiredMap[key] then
+            return '(.+)'  -- 必填：至少一个字符
+        else
+            return '(.*)'  -- 可选：零个或多个字符
+        end
+    end)
+
+    return '^' .. pattern .. '$'
+end
+
 --- 验证话术是否存在于该职业的话术库中
+--- 支持精确匹配和模板匹配（带占位符的话术）
 ---@param jobName string
 ---@param message string
 ---@return boolean
@@ -25,7 +55,18 @@ local function IsValidQuote(jobName, message)
 
     for _, category in ipairs(JobQuotes[jobName].categories) do
         for _, quote in ipairs(category.quotes) do
-            if quote.text == message then return true end
+            if quote.placeholders and #quote.placeholders > 0 then
+                -- 带占位符的话术：使用模板匹配
+                local pattern = TemplateToPattern(quote.text, quote.placeholders)
+                if message:match(pattern) then
+                    return true
+                end
+            else
+                -- 普通话术：精确匹配
+                if quote.text == message then
+                    return true
+                end
+            end
         end
     end
     return false

@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import { Icon } from '@iconify/vue'
 import type { Quote } from '@/types'
+import { hasPlaceholders } from '@/utils/placeholder'
 
 /** FiveM 颜色代码映射 */
 const FIVEM_COLORS: Record<string, string> = {
@@ -50,18 +51,40 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   send: [message: string]
+  openPlaceholder: [quote: Quote]
 }>()
 
-/** 解析后的彩色文本片段 */
-const parsedText = computed(() => parseFivemColors(props.quote.text))
+/** 将占位符 {key} 替换为 [label] 用于显示 */
+function formatDisplayText(quote: Quote): string {
+  let text = quote.text
+  if (quote.placeholders) {
+    for (const p of quote.placeholders) {
+      const pattern = new RegExp(`\\{${p.key}\\}`, 'g')
+      text = text.replace(pattern, `[${p.label}]`)
+    }
+  }
+  return text
+}
 
-function handleClick(text: string) {
-  emit('send', text)
+/** 解析后的彩色文本片段 */
+const parsedText = computed(() => parseFivemColors(formatDisplayText(props.quote)))
+
+/** 是否有占位符 */
+const hasPlaceholderFields = computed(() => hasPlaceholders(props.quote))
+
+function handleClick() {
+  if (hasPlaceholderFields.value) {
+    // 有占位符，打开表单弹窗
+    emit('openPlaceholder', props.quote)
+  } else {
+    // 无占位符，直接发送
+    emit('send', props.quote.text)
+  }
 }
 </script>
 
 <template>
-  <button class="quote-item" @click="handleClick(quote.text)">
+  <button class="quote-item" @click="handleClick">
     <span class="quote-text">
       <span
         v-for="(segment, index) in parsedText"
@@ -69,7 +92,8 @@ function handleClick(text: string) {
         :style="segment.color ? { color: segment.color } : undefined"
       >{{ segment.text }}</span>
     </span>
-    <Icon icon="mdi:send" class="send-icon" />
+    <Icon v-if="hasPlaceholderFields" icon="mdi:form-textbox" class="send-icon placeholder-icon" />
+    <Icon v-else icon="mdi:send" class="send-icon" />
   </button>
 </template>
 
@@ -118,5 +142,13 @@ function handleClick(text: string) {
   opacity: 0;
   color: var(--neutral-400);
   transition: all 0.15s ease;
+}
+
+.placeholder-icon {
+  opacity: 0.5;
+}
+
+.quote-item:hover .placeholder-icon {
+  color: var(--accent-blue);
 }
 </style>

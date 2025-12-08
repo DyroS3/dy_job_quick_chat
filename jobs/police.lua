@@ -16,8 +16,16 @@
 
     Quote 话术结构:
     - id: string          话术唯一标识
-    - text: string        话术内容, 点击后发送到聊天
+    - text: string        话术内容, 点击后发送到聊天, 支持 {key} 占位符
     - favorite: boolean   是否收藏 (预留功能)
+    - placeholders: table (可选) 占位符定义列表
+
+    Placeholder 占位符结构:
+    - key: string         占位符标识, 对应 text 中的 {key}
+    - label: string       表单显示的中文标签
+    - default: string     (可选) 默认值
+    - required: boolean   (可选) 是否必填, 默认 false
+    - maxLength: number   (可选) 最大长度, 默认 100
 ]]
 
 JobQuotes = JobQuotes or {}
@@ -89,6 +97,34 @@ JobQuotes['police'] = {
                 { id = 'r003', text = '嫌疑人正在逃跑, 方向是...', favorite = false },
                 { id = 'r004', text = '现场已控制, 情况稳定', favorite = false },
                 { id = 'r005', text = '需要医疗支援', favorite = false },
+            }
+        },
+        {
+            id = 'judgment',
+            name = '判罚公告',
+            expanded = true,
+            quotes = {
+                {
+                    id = 'j001',
+                    text = '^3嫌疑人{name}因^8{crime}^3. 警方判罚: 罚款{fine}, 监狱{time}.望各位市民遵纪守法, 快乐游戏.',
+                    favorite = false,
+                    placeholders = {
+                        { key = 'name', label = '嫌疑人名称', required = true, maxLength = 20 },
+                        { key = 'crime', label = '罪名', default = '违法行为', required = true, maxLength = 30 },
+                        { key = 'fine', label = '罚款金额', default = '10W', maxLength = 10 },
+                        { key = 'time', label = '监狱时间', default = '10分钟', maxLength = 10 }
+                    }
+                },
+                {
+                    id = 'j002',
+                    text = '^1[警方通报]^0 {name}因{crime}被依法处理, 罚款{fine}.',
+                    favorite = false,
+                    placeholders = {
+                        { key = 'name', label = '当事人', required = true, maxLength = 20 },
+                        { key = 'crime', label = '违法行为', required = true, maxLength = 50 },
+                        { key = 'fine', label = '罚款金额', default = '5W', maxLength = 10 }
+                    }
+                }
             }
         }
     }

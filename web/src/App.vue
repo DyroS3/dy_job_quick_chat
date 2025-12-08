@@ -38,6 +38,34 @@ if (import.meta.env.DEV) {
                   { id: 'c001', text: '^1[警告]^0 停下！这是^1警察^0！', favorite: false },
                   { id: 'c002', text: '^8[紧急]^0 放下^3武器^0，^6双手抱头^0！', favorite: false },
                 ]
+              },
+              {
+                id: 'judgment',
+                name: '判罚公告',
+                expanded: true,
+                quotes: [
+                  {
+                    id: 'j001',
+                    text: '^3嫌疑人{name}因^8{crime}^3。警方判罚：罚款{fine}，监狱{time}。望各位市民遵纪守法，快乐游戏。',
+                    favorite: false,
+                    placeholders: [
+                      { key: 'name', label: '嫌疑人名称', required: true, maxLength: 20 },
+                      { key: 'crime', label: '罪名', default: '违法行为', required: true, maxLength: 30 },
+                      { key: 'fine', label: '罚款金额', default: '10W', maxLength: 10 },
+                      { key: 'time', label: '监狱时间', default: '10分钟', maxLength: 10 }
+                    ]
+                  },
+                  {
+                    id: 'j002',
+                    text: '^1[警方通报]^0 {name}因{crime}被依法处理，罚款{fine}。',
+                    favorite: false,
+                    placeholders: [
+                      { key: 'name', label: '当事人', required: true, maxLength: 20 },
+                      { key: 'crime', label: '违法行为', required: true, maxLength: 50 },
+                      { key: 'fine', label: '罚款金额', default: '5W', maxLength: 10 }
+                    ]
+                  }
+                ]
               }
             ]
           }

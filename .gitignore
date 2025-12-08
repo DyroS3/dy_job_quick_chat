@@ -2,6 +2,9 @@
 node_modules/
 web/node_modules/
 
+# Kiro
+.kiro/
+
 # Build output
 web/dist/
 

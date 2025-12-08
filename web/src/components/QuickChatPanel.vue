@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { Icon } from '@iconify/vue'
-import type { Job } from '@/types'
+import type { Job, Quote } from '@/types'
 import Sidebar from './Sidebar.vue'
 import CategoryAccordion from './CategoryAccordion.vue'
+import PlaceholderModal from './PlaceholderModal.vue'
 
 const props = defineProps<{
   jobs: Job[]
@@ -20,6 +21,10 @@ const sidebarCollapsed = ref(false)
 const expandedCategoryId = ref<string | null>(null)
 const searchQuery = ref('')
 const isDark = ref(false)
+
+// 占位符弹窗状态
+const placeholderQuote = ref<Quote | null>(null)
+const showPlaceholderModal = computed(() => placeholderQuote.value !== null)
 
 const selectedJob = computed(() => {
   return props.jobs.find(job => job.id === selectedJobId.value)
@@ -75,8 +80,25 @@ function handleClose() {
   emit('close')
 }
 
+// 打开占位符弹窗
+function handleOpenPlaceholder(quote: Quote) {
+  placeholderQuote.value = quote
+}
+
+// 占位符弹窗提交
+function handlePlaceholderSubmit(message: string) {
+  placeholderQuote.value = null
+  emit('send', message)
+}
+
+// 占位符弹窗取消
+function handlePlaceholderCancel() {
+  placeholderQuote.value = null
+}
+
 function handleKeydown(e: KeyboardEvent) {
-  if (e.key === 'Escape') {
+  // 如果弹窗打开，ESC 由弹窗处理，不关闭面板
+  if (e.key === 'Escape' && !showPlaceholderModal.value) {
     handleClose()
   }
 }
@@ -179,6 +201,7 @@ onUnmounted(() => {
               :is-expanded="expandedCategoryId === category.id || !!searchQuery"
               @toggle="handleToggleCategory(category.id)"
               @send="handleSend"
+              @open-placeholder="handleOpenPlaceholder"
             />
           </div>
           <div v-else class="empty-state">
@@ -193,6 +216,15 @@ onUnmounted(() => {
         </div>
       </div>
     </div>
+
+    <!-- 占位符输入弹窗 -->
+    <PlaceholderModal
+      v-if="placeholderQuote"
+      :quote="placeholderQuote"
+      :visible="showPlaceholderModal"
+      @submit="handlePlaceholderSubmit"
+      @cancel="handlePlaceholderCancel"
+    />
   </div>
 </template>
 
